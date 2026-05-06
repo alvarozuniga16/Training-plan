@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hybrid Training">
+<title>Hybrid Training</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ── Reset & Base ─────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:        #0a0a0a;
+    --surface:   #111111;
+    --card:      #181818;
+    --border:    #252525;
+    --accent:    #c8922a;
+    --accent-dim:#7a5718;
+    --accent-glow:rgba(200,146,42,0.12);
+    --text:      #e8e0d4;
+    --sub:       #a09488;
+    --muted:     #7a7068;
+    --hub:       #3a6b8a;
+    --cav:       #6b3a3a;
+    --both:      #3a6b4a;
+    --mob:       #6b4a8a;
+    --safe-top:  env(safe-area-inset-top, 0px);
+    --safe-bot:  env(safe-area-inset-bottom, 0px);
+  }
+  html { font-size: 16px; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  img, svg { display: block; }
+
+  /* ── Scrollbar ────────────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* ── App Shell ────────────────────────────────────────────────── */
+  #app { position: relative; width: 100%; min-height: 100dvh; }
+
+  /* ── Screen Transitions ───────────────────────────────────────── */
+  .screen {
+    position: absolute; inset: 0;
+    width: 100%; min-height: 100dvh;
+    transition: transform .32s cubic-bezier(.4,0,.2,1), opacity .32s ease;
+    will-change: transform, opacity;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .screen.hidden-left  { transform: translateX(-30%); opacity: 0; pointer-events: none; }
+  .screen.hidden-right { transform: translateX(100%); opacity: 0; pointer-events: none; }
+  .screen.visible      { transform: translateX(0); opacity: 1; }
+
+  /* ── Tags / Chips ─────────────────────────────────────────────── */
+  .tag {
+    display: inline-flex; align-items: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 4px;
+    border: 1px solid; white-space: nowrap;
+  }
+  .tag-hub  { color: var(--hub);  background: color-mix(in srgb, var(--hub) 15%, transparent);  border-color: color-mix(in srgb, var(--hub) 35%, transparent); }
+  .tag-cav  { color: var(--cav);  background: color-mix(in srgb, var(--cav) 15%, transparent);  border-color: color-mix(in srgb, var(--cav) 35%, transparent); }
+  .tag-both { color: var(--both); background: color-mix(in srgb, var(--both) 15%, transparent); border-color: color-mix(in srgb, var(--both) 35%, transparent); }
+  .tag-mob  { color: var(--mob);  background: color-mix(in srgb, var(--mob) 15%, transparent);  border-color: color-mix(in srgb, var(--mob) 35%, transparent); }
+  .chip {
+    display: inline-flex; align-items: center;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    padding: 3px 8px; border-radius: 4px;
+    background: var(--card); border: 1px solid var(--border); color: var(--sub);
+    white-space: nowrap;
+  }
+  .chip-accent { background: var(--accent-glow); border-color: var(--accent-dim); color: var(--accent); }
+  .chip-muted  { background: var(--card); border-color: var(--border); color: var(--muted); }
+
+  /* ── Divider ──────────────────────────────────────────────────── */
+  .divider { height: 1px; background: var(--border); }
+
+  /* ════════════════════════════════════════════════════════════════
+     HOME SCREEN
+  ════════════════════════════════════════════════════════════════ */
+  #home { background: var(--bg); }
+
+  /* Hero */
+  .hero {
+    padding: calc(var(--safe-top) + 28px) 20px 24px;
+    background: radial-gradient(ellipse 60% 40% at 80% 20%, var(--accent-glow), transparent);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+  }
+  .hero-title {
+    font-size: clamp(22px, 6vw, 28px);
+    font-weight: 300; line-height: 1.2; color: var(--text);
+    letter-spacing: -.01em; margin-bottom: 8px;
+  }
+  .hero-subtitle { font-size: 13px; color: var(--sub); line-height: 1.55; margin-bottom: 16px; }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* Info toggle buttons */
+  .info-toggles {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    padding: 12px 16px;
+  }
+  .info-btn {
+    padding: 10px 12px; border-radius: 8px; font-size: 11px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--sub); text-align: center; transition: all .2s;
+    font-family: 'DM Mono', monospace; letter-spacing: .03em;
+  }
+  .info-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
+
+  /* Panels */
+  .panel {
+    margin: 0 16px 12px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 16px; overflow: hidden;
+    animation: slideDown .25s ease;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .panel-title {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px;
+  }
+
+  /* Phase cards */
+  .phases { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .phase-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px;
+  }
+  .phase-label { color: var(--accent); font-size: 11px; font-weight: 600; margin-bottom: 8px; }
+  .phase-row { margin-bottom: 3px; }
+  .phase-row .pk { color: var(--muted); font-size: 10px; }
+  .phase-row .pv { color: var(--text); font-size: 10px; }
+  .phase-focus { margin-top: 6px; color: var(--sub); font-size: 10px; font-style: italic; line-height: 1.5; }
+
+  /* Principles */
+  .principle { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; }
+  .principle:not(:last-child) { border-bottom: 1px solid var(--border); }
+  .p-icon { font-size: 16px; width: 26px; flex-shrink: 0; }
+  .p-text { font-size: 12px; color: var(--sub); line-height: 1.55; margin-top: 4px; }
+
+  /* Section header */
+  .section-header {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--muted); padding: 8px 20px 6px;
+  }
+
+  /* Day cards */
+  .day-card {
+    display: flex; align-items: center; gap: 0;
+    margin: 0 16px 8px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    overflow: hidden; cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+  }
+  .day-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  }
+  .day-card.type-cav::before  { background: var(--cav); }
+  .day-card.type-hub::before  { background: var(--hub); }
+  .day-card.type-both::before { background: var(--both); }
+  .day-card.type-mob::before  { background: var(--mob); }
+  .day-card:active { transform: scale(.985); }
+
+  .dc-icon-col {
+    width: 64px; padding: 14px 0; display: flex; flex-direction: column;
+    align-items: center; gap: 3px; flex-shrink: 0;
+    border-right: 1px solid var(--border);
+  }
+  .dc-emoji { font-size: 22px; line-height: 1; }
+  .dc-dow {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: .1em; color: var(--accent); text-transform: uppercase;
+  }
+  .dc-body { flex: 1; padding: 13px 14px; min-width: 0; }
+  .dc-title { font-size: 14px; color: var(--text); line-height: 1.35; margin-bottom: 6px; }
+  .dc-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .dc-dur { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); }
+  .dc-chevron { color: var(--accent-dim); font-size: 18px; padding-right: 14px; flex-shrink: 0; }
+
+  /* Legend */
+  .legend {
+    display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;
+    padding: 14px 20px 30px; margin-bottom: var(--safe-bot);
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); }
+
+  /* ════════════════════════════════════════════════════════════════
+     DAY SCREEN
+  ════════════════════════════════════════════════════════════════ */
+  #day { background: var(--bg); }
+
+  /* Sticky top bar */
+  .top-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(17,17,17,.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: calc(var(--safe-top) + 10px) 16px 10px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .back-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--card); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-size: 18px; flex-shrink: 0;
+    transition: background .15s;
+  }
+  .back-btn:active { background: var(--border); }
+  .top-bar-text { flex: 1; min-width: 0; }
+  .tb-dow {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: .15em; text-transform: uppercase; color: var(--accent);
+  }
+  .tb-title { font-size: 15px; color: var(--text); line-height: 1.3; }
+
+  /* Overview card */
+  .overview-card {
+    margin: 14px 16px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); /* will be replaced by JS */
+    padding: 16px;
+  }
+  .ov-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .ov-icon-tag { display: flex; align-items: center; gap: 10px; }
+  .ov-emoji { font-size: 24px; }
+  .ov-equipment { margin-top: 10px; }
+  .ov-eq-label { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: .1em; margin-bottom: 5px; }
+  .ov-eq-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .ov-philosophy { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .ov-phil-line { display: flex; gap: 6px; margin-bottom: 5px; align-items: flex-start; }
+  .ov-bullet { color: var(--accent); font-size: 10px; margin-top: 2px; flex-shrink: 0; }
+  .ov-phil-text { font-size: 12px; color: var(--sub); line-height: 1.55; }
+
+  /* Hint */
+  .hint {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: .15em; color: var(--muted); text-transform: uppercase;
+    padding: 4px 20px 8px;
+  }
+
+  /* Section cards */
+  .sec-card {
+    margin: 0 16px 10px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .sec-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sec-header-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .sec-label { font-size: 13px; color: var(--text); font-weight: 400; line-height: 1.3; }
+  .sec-chevron {
+    color: var(--accent); font-size: 20px; flex-shrink: 0;
+    transition: transform .25s ease;
+  }
+  .sec-chevron.open { transform: rotate(180deg); }
+
+  /* Section body */
+  .sec-body { overflow: hidden; max-height: 0; transition: max-height .35s cubic-bezier(.4,0,.2,1); }
+  .sec-body.open { max-height: 9999px; }
+  .sec-note {
+    background: var(--card); border-top: 1px solid var(--border);
+    padding: 10px 14px;
+    font-size: 11px; font-style: italic; color: var(--sub); line-height: 1.6;
+  }
+
+  /* Exercise rows */
+  .ex-row {
+    padding: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .ex-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 10px; margin-bottom: 7px;
+  }
+  .ex-name { font-size: 14px; color: var(--text); line-height: 1.35; flex: 1; }
+  .ex-badges { display: flex; flex-direction: column; gap: 3px; align-items: flex-end; flex-shrink: 0; }
+  .ex-cue { font-size: 12px; color: var(--sub); line-height: 1.65; }
+
+  /* Bottom spacer */
+  .bot-spacer { height: calc(32px + var(--safe-bot)); }
+
+  /* ── Install banner ───────────────────────────────────────────── */
+  #install-banner {
+    position: fixed; bottom: calc(16px + var(--safe-bot)); left: 16px; right: 16px;
+    background: var(--surface); border: 1px solid var(--accent);
+    border-radius: 12px; padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.6);
+    z-index: 999; animation: slideUp .4s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  #install-banner.hidden { display: none; }
+  .ib-text { flex: 1; font-size: 13px; color: var(--text); line-height: 1.4; }
+  .ib-sub { font-size: 11px; color: var(--sub); margin-top: 2px; }
+  .ib-install {
+    background: var(--accent); color: #000; border-radius: 8px;
+    padding: 8px 14px; font-size: 12px; font-weight: 600;
+    font-family: 'DM Mono', monospace; white-space: nowrap;
+  }
+  .ib-close { color: var(--muted); font-size: 20px; padding: 4px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══ HOME SCREEN ═══════════════════════════════════════════════ -->
+  <div id="home" class="screen visible">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-eyebrow">Huberman × Athlean-X Hybrid Protocol</div>
+      <h1 class="hero-title">The Home Performance Program</h1>
+      <p class="hero-subtitle">Science-backed training for strength, longevity &amp; athleticism — built for your home setup.</p>
+      <div class="hero-tags">
+        <span class="tag tag-hub">Zone 2 + Zone 5</span>
+        <span class="tag tag-cav">Injury-Prevention</span>
+        <span class="tag tag-mob">Slant Board Mobility</span>
+        <span class="tag" style="color:var(--accent);background:var(--accent-glow);border-color:color-mix(in srgb,var(--accent) 35%,transparent)">Monthly Phases</span>
+      </div>
+    </div>
+
+    <!-- Info toggles -->
+    <div class="info-toggles">
+      <button class="info-btn" id="btn-phases" onclick="togglePanel('phases')">📊 Monthly Phases</button>
+      <button class="info-btn" id="btn-principles" onclick="togglePanel('principles')">⚡ Key Principles</button>
+    </div>
+
+    <!-- Periodization panel -->
+    <div id="panel-phases" style="display:none"></div>
+    <!-- Principles panel -->
+    <div id="panel-principles" style="display:none"></div>
+
+    <div class="section-header">Weekly Schedule</div>
+    <div id="day-list"></div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--hub)"></div><span class="legend-label">Huberman</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--cav)"></div><span class="legend-label">Cavaliere</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--both)"></div><span class="legend-label">Hybrid</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--mob)"></div><span class="legend-label">Mobility</span></div>
+    </div>
+  </div>
+
+  <!-- ══ DAY SCREEN ════════════════════════════════════════════════ -->
+  <div id="day" class="screen hidden-right">
+    <div class="top-bar">
+      <button class="back-btn" onclick="goHome()" aria-label="Back">&#8592;</button>
+      <div class="top-bar-text">
+        <div class="tb-dow" id="tb-dow"></div>
+        <div class="tb-title" id="tb-title"></div>
+      </div>
+    </div>
+    <div id="day-content"></div>
+    <div class="bot-spacer"></div>
+  </div>
+
+</div>
+
+<!-- Install banner -->
+<div id="install-banner" class="hidden">
+  <div class="ib-text">
+    Add to Home Screen
+    <div class="ib-sub">Install for offline access &amp; full-screen mode</div>
+  </div>
+  <button class="ib-install" id="ib-install-btn">Install</button>
+  <button class="ib-close" onclick="dismissInstall()">✕</button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════════════
+const PHASES = {
+  A: { label:'Month A — Strength', sets:'3–4 sets', reps:'4–8 reps', weight:'Heavy (near max)', rest:'2–4 min', focus:'Neural adaptation, tendon strength, raw force production' },
+  B: { label:'Month B — Hypertrophy', sets:'3 sets', reps:'8–15 reps', weight:'Moderate (challenging but controlled)', rest:'90 sec', focus:'Muscle fiber recruitment, metabolic stress, size' }
+};
+
+const PRINCIPLES = [
+  ['🧠','hub','Choose 2 exercises per muscle: one at peak contraction, one at full stretch'],
+  ['📴','hub','Phone off during training. Full presence = full adaptation'],
+  ['😤','hub','Train to near-failure. Final reps should feel like a struggle'],
+  ['🧊','hub','Cold plunge 6–8+ hrs after lifting — NOT immediately after (blunts hypertrophy)'],
+  ['💨','hub','Physiological sigh between sets: manage stress, recover faster'],
+  ['🔥','cav','Always prime the target muscle before loading it. Never train cold'],
+  ['🦴','cav','Full range of motion builds more muscle AND prevents injury. No half reps'],
+  ['🫀','cav','Dead hang 1–2 min daily: grip + spinal decompression + shoulder health'],
+  ['👁️','cav','Mind-muscle connection: feel the target muscle, not just move the weight'],
+  ['↕️','cav','Band face pulls every push day. Non-negotiable for shoulder longevity'],
+];
+
+const DAYS = [
+  {
+    dow:'Sunday', title:'Zone 2 Endurance + Morning Mobility',
+    type:'Cardio + Mobility', typeTag:'both', icon:'🚴', dur:'60–75 min',
+    equipment:['Stationary Bike','Slant Board','Resistance Band','Kettlebell'],
+    phil:['Huberman: Zone 2 builds mitochondrial density & longevity','Cavaliere: Mobility work prevents imbalances & injury'],
+    sections:[
+      { label:'ZONE 2 CARDIO', tag:'hub',
+        note:'65–75% max HR. Nasal breathing. Maintain conversational pace. 45–60 min.',
+        exercises:[
+          { name:'Stationary Bike — Zone 2', sets:'1 continuous', reps:'45–60 min', cue:'Nasal breathing throughout. HR: ~130–150 bpm (220 minus age × 0.70). You should be able to speak in full sentences.' }
+        ]
+      },
+      { label:'MORNING MOBILITY FLOW', tag:'mob',
+        note:'Complete after the bike. Do not rush — this is active recovery with a purpose.',
+        exercises:[
+          { name:'Slant Board Calf Stretch', sets:'2', reps:'90 sec each side', cue:'Stand on board, lean forearms into wall, knees straight. Deep Achilles + calf release.' },
+          { name:'Slant Board Jefferson Curl', sets:'2', reps:'8 slow reps', cue:'Light KB or bodyweight. Roll down vertebra-by-vertebra. Decompresses spine, opens posterior chain.' },
+          { name:'Slant Board Hip Flexor Stretch', sets:'2', reps:'45 sec each side', cue:'One foot on high end of board, other knee on ground. Push hips forward. Keep ribs stacked over hips.' },
+          { name:'90/90 Hip Switch', sets:'2', reps:'10 transitions', cue:'Sit on floor, legs at 90°. Rotate hips side to side. Opens internal & external hip rotation.' },
+          { name:'Thoracic Rotation (quadruped)', sets:'2', reps:'12 each side', cue:'Hand behind head. Rotate elbow to ceiling. Primary antidote to desk posture.' },
+          { name:'KB Turkish Get-Up', sets:'2', reps:'3 each side (light)', cue:'The single best full-body mobility + stability drill in existence. Move slowly — each transition is the work. Trains shoulder stability, hip mobility, spinal control, and balance simultaneously.' },
+          { name:'Dead Hang', sets:'2', reps:'60–90 sec', cue:'Passive hang. Spinal decompression + shoulder mobility. Grip health marker. Cavaliere\'s #1 daily non-negotiable.' },
+        ]
+      }
+    ]
+  },
+  {
+    dow:'Monday', title:'Legs — Slant Board Protocol',
+    type:'Resistance Training', typeTag:'cav', icon:'🦵', dur:'55–70 min',
+    equipment:['Slant Board','Dumbbells','Kettlebell','Bench','Loop Bands'],
+    phil:['Huberman: Alternate monthly between 4–8 reps (strength) and 8–15 reps (hypertrophy)','Cavaliere: Primer first, compound movements, full ROM, joint-safe loading'],
+    sections:[
+      { label:'WARM-UP PRIMER', tag:'cav',
+        note:'2 sets each. Sub-maximal. Prepares VMO, glutes, and hip stabilizers.',
+        exercises:[
+          { name:'KB Swing (hip hinge primer)', sets:'2', reps:'10', cue:'Light-moderate KB. Hip HINGE not a squat — hike bell back between legs, snap hips forward explosively. Primes glutes and hamstrings perfectly before loading.' },
+          { name:'Loop Band Hip Circles', sets:'2', reps:'15 each direction', cue:'Band just above knees. Activate glute med before any loading.' },
+          { name:'Slant Board ATG Hold (deep squat)', sets:'2', reps:'30–45 sec hold', cue:'Feet on board, drop into deepest comfortable squat. Hands in front for balance. Assess your range.' },
+          { name:'Leg Swings (forward/lateral)', sets:'1', reps:'10 each direction/leg', cue:'Dynamic. Hip joint mobilization before loading.' },
+        ]
+      },
+      { label:'MAIN WORK', tag:'both',
+        note:'Month A: 3–4 sets × 4–8 reps, 2–4 min rest, heavy. Month B: 3 sets × 8–15 reps, 90 sec rest, moderate.',
+        exercises:[
+          { name:'Slant Board Goblet Squat', sets:'3–4', reps:'Per phase', cue:'Hold KB or DB at chest. Heels elevated on slant board. Drive knees out over toes. Full depth. Pause at bottom for max quad recruitment.' },
+          { name:'Bulgarian Split Squat (front foot on slant board)', sets:'3–4/leg', reps:'Per phase', cue:'Rear foot elevated on bench, front foot on slant board. Targets VMO aggressively. Keep torso upright. Slow eccentric (3 sec down).' },
+          { name:'Romanian Deadlift (DBs or KB)', sets:'3–4', reps:'Per phase', cue:'Hip hinge, soft knee bend. Feel hamstring stretch at bottom. Two DBs, one heavier DB, or a heavy KB. Full hip lock at top.' },
+          { name:'KB Goblet Squat (slant board option)', sets:'2', reps:'10–12 slow', cue:'Hold KB at chest. Use slant board for deeper range or flat ground for more ankle challenge. Great technique builder.' },
+          { name:'Slant Board ATG Split Squat', sets:'3/leg', reps:'8–12', cue:'Back knee drops close to floor. Pure quad + knee tendon strengthening. Light load or bodyweight. The longevity movement.' },
+          { name:'Nordic Hamstring Curl (bench anchor)', sets:'3', reps:'4–8 (assisted)', cue:'Feet anchored under bench. Lower body toward floor with control. Use hands to assist up. Unrivaled eccentric hamstring strength.' },
+          { name:'Slant Board Calf Raises', sets:'3', reps:'15–20 slow', cue:'Full range — deep stretch at bottom, full contraction at top. 2-sec hold at peak.' },
+          { name:'Loop Band Lateral Walks', sets:'2', reps:'15 steps each way', cue:'Band above knees. Hips back, knees out. Glute med isolation. Cavaliere staple for knee alignment.' },
+        ]
+      },
+      { label:'CONDITIONING FINISHER', tag:'cav',
+        note:'Cavaliere PHAT protocol — tracks cardiovascular recovery speed.',
+        exercises:[
+          { name:'KB Swing Finisher', sets:'4 rounds', reps:'15 swings / 30 sec rest', cue:'Moderate-heavy KB. All hip drive, no arm pull. Ballistic movement — maximum power per rep. Excellent cardiovascular + posterior chain finisher.' },
+          { name:'Stationary Bike PHAT', sets:'2–3 rounds', reps:'30 sec hard / 60 sec easy', cue:'Sprint at 85–90% max HR for 30 sec, recover on easy pedal. Track how quickly HR returns to within 10% of resting.' },
+        ]
+      }
+    ]
+  },
+  {
+    dow:'Tuesday', title:'Recovery: Cold Plunge + Deep Mobility',
+    type:'Recovery', typeTag:'both', icon:'🧊', dur:'45–60 min',
+    equipment:['Cold Plunge','Slant Board','Resistance Band','Kettlebell'],
+    phil:['Huberman: Cold exposure 6–8 hrs post-resistance training — NOT immediately after (limits hypertrophy signal)','Cavaliere: Active recovery days preserve athleticism & movement quality'],
+    sections:[
+      { label:'DELIBERATE COLD EXPOSURE', tag:'hub',
+        note:'2–3 rounds. Start conservatively. Never cold plunge within 6–8 hrs of finishing a resistance session.',
+        exercises:[
+          { name:'Hot Shower → Cold Plunge', sets:'2–3 rounds', reps:'3–5 min cold / 5 min warm', cue:'Cold: aim for 50–60°F. Try to stay still. Use physiological sigh (double inhale, full exhale) to regulate stress response. Stay present — don\'t numb out.' },
+          { name:'Physiological Sigh Practice', sets:'5–10', reps:'Between cold rounds', cue:'2 sharp nasal inhales followed by one long, complete exhale. Fastest known way to downregulate the nervous system.' },
+        ]
+      },
+      { label:'DEEP MOBILITY SESSION', tag:'mob',
+        note:'This is intentional therapeutic work. Move slowly and breathe into each position.',
+        exercises:[
+          { name:'KB Halo', sets:'2', reps:'8 each direction', cue:'Light KB. Circle the bell slowly around your head, keeping core braced. Trains shoulder mobility through full circumduction, thoracic rotation, and grip.' },
+          { name:'KB Windmill', sets:'2', reps:'5 each side (light)', cue:'KB pressed overhead, push hip out, slide free hand down inner leg. Combines hip mobility, shoulder stability, and thoracic rotation. Move extremely slowly.' },
+          { name:'World\'s Greatest Stretch', sets:'2', reps:'5 each side', cue:'Lunge forward, same-side elbow to floor, rotate open. Opens hip flexor, thoracic spine, and hamstring simultaneously.' },
+          { name:'Pigeon Pose', sets:'2', reps:'90 sec each side', cue:'Sink hips evenly. Breathe into external hip rotation. Addresses piriformis tightness that causes knee + low back issues.' },
+          { name:'Couch Stretch', sets:'2', reps:'90 sec each side', cue:'Rear shin elevated against wall. Most people\'s #1 hip flexor deficiency. Squeeze glute of rear leg.' },
+          { name:'Shoulder CARs', sets:'2', reps:'5 each direction/shoulder', cue:'Slow, full-range shoulder circles. Move through end range with control. Cavaliere-endorsed joint maintenance.' },
+          { name:'Thoracic Extension over Bench', sets:'2', reps:'10–12', cue:'Drape upper back over bench edge, arms crossed on chest. Segment by segment extension. Reverses kyphosis from sitting.' },
+          { name:'Slant Board Hamstring Stretch', sets:'2', reps:'30–45 sec each side', cue:'Toes on top of board, lean toward toes with neutral spine. Hip hinge, not spinal flexion.' },
+          { name:'Ankle Circles on Slant Board', sets:'2', reps:'15 circles each direction/foot', cue:'Standing on board, slow ankle circles. Ankle mobility is the foundation of squat depth and knee health.' },
+          { name:'Dead Hang', sets:'2', reps:'60–90 sec', cue:'Full shoulder elevation at top. Decompresses spine, opens lats, trains grip. Do this every single day.' },
+        ]
+      }
+    ]
+  },
+  {
+    dow:'Wednesday', title:'Push — Chest, Shoulders, Triceps',
+    type:'Resistance Training', typeTag:'cav', icon:'💪', dur:'55–65 min',
+    equipment:['Dumbbells','Kettlebell','Bench','Resistance Bands','Z-Bar'],
+    phil:['Huberman: Choose 2 exercises per muscle — one at peak contraction, one at full stretch','Cavaliere: Warm the shoulder joint BEFORE any pressing — never load cold'],
+    sections:[
+      { label:'SHOULDER PRIMER', tag:'cav',
+        note:'Non-negotiable. Almost every chest injury happens in a shoulder that wasn\'t warmed up first.',
+        exercises:[
+          { name:'KB Halo', sets:'2', reps:'8 each direction', cue:'Light KB. Slow circles around the head. Warms up the entire shoulder girdle and cervical spine. Far superior to generic arm circles for pre-press preparation.' },
+          { name:'Band Pull-Aparts', sets:'2', reps:'15–20', cue:'Arms straight, pull band apart to chest level. Activates posterior deltoid + rhomboids. Counteracts internal rotation from pressing.' },
+          { name:'Band Face Pulls', sets:'2', reps:'15', cue:'Elbow high, pull to forehead level. External rotation of the shoulder. Cavaliere\'s #1 corrective exercise for long-term shoulder health.' },
+          { name:'Arm Circles + Shoulder CARs', sets:'1', reps:'10 each direction', cue:'Dynamic. Gets synovial fluid flowing in joint before loading.' },
+        ]
+      },
+      { label:'CHEST + SHOULDERS', tag:'both',
+        note:'Month A: 3–4 sets × 4–8 reps, heavy, 2–4 min rest. Month B: 3 sets × 8–15 reps, 90 sec rest.',
+        exercises:[
+          { name:'KB Single-Arm Clean & Press', sets:'3', reps:'6–8 each side', cue:'Clean the KB to rack position (fist at chest, elbow tucked), then press overhead. Full-body power movement — hip drive into shoulder strength. Trains shoulder stability under dynamic load in a way DBs cannot replicate.' },
+          { name:'DB Flat Bench Press', sets:'3–4', reps:'Per phase', cue:'Full ROM — let DBs stretch your chest at the bottom. Drive through heels. Leg drive stabilizes everything above it. Touch DBs at top for peak contraction.' },
+          { name:'DB Incline Press (30–45°)', sets:'3–4', reps:'Per phase', cue:'Emphasizes upper chest + anterior delt. Slow eccentric (3 sec down). Feel the stretch at bottom, not just the press.' },
+          { name:'DB Overhead Press', sets:'3–4', reps:'Per phase', cue:'Full lockout overhead for peak contraction. Elbows slightly forward — not flared wide (reduces shoulder impingement).' },
+          { name:'DB Lateral Raise (slow eccentric)', sets:'3', reps:'12–15', cue:'Raise to just below shoulder height. 3-second lower. "Pinky high" technique for better medial delt isolation.' },
+          { name:'DB Rear Delt Row (Urlacher variation)', sets:'3', reps:'12–15', cue:'Elbow drives back and behind your body. Elbow extension behind the body is what lights up the rear delt. Critical for shoulder balance.' },
+          { name:'Band Face Pulls (working sets)', sets:'3', reps:'15–20', cue:'Heavier band. Every push day should have this. Non-negotiable for long-term shoulder health.' },
+        ]
+      },
+      { label:'TRICEPS BURNOUT', tag:'cav',
+        note:'Indirect tricep work from pressing is significant — supplemental work here is focused and brief.',
+        exercises:[
+          { name:'Z-Bar Skull Crusher (on bench)', sets:'3', reps:'10–12', cue:'Lower bar behind head slightly (overhead position) to hit the long head of the tricep — largest portion. Z-bar reduces wrist strain vs. straight bar.' },
+          { name:'Diamond Push-Up (to failure)', sets:'2', reps:'AMRAP', cue:'Hands close together, elbows track back. Full lockout at top. Go to honest failure.' },
+        ]
+      }
+    ]
+  },
+  {
+    dow:'Thursday', title:'Moderate Cardio + Athletic Conditioning',
+    type:'Cardio + Conditioning', typeTag:'both', icon:'🔥', dur:'50–60 min',
+    equipment:['Stationary Bike','Dumbbells','Kettlebell','Resistance Bands'],
+    phil:['Huberman: Moderate cardio (75–80% max HR) for 35 min bridges Zone 2 and Zone 5 adaptations','Cavaliere: PHAT circuits build cardiovascular fitness AND muscular endurance simultaneously'],
+    sections:[
+      { label:'MODERATE CARDIO', tag:'hub',
+        note:'Faster than Zone 2 — you should NOT be able to hold a conversation comfortably here.',
+        exercises:[
+          { name:'Stationary Bike — Moderate Intensity', sets:'1 continuous', reps:'30–35 min', cue:'75–80% max HR. Steady, sustained effort. Not a sprint, not a stroll. Bridges aerobic and anaerobic systems.' },
+        ]
+      },
+      { label:'PHAT CONDITIONING CIRCUIT', tag:'cav',
+        note:'Peripheral Heart Action Training. Alternates upper/lower to keep blood moving. 30 sec per exercise, no rest between. Rest 90 sec between rounds. 5–6 rounds.',
+        exercises:[
+          { name:'DB Squat to Press', sets:'5–6 rounds', reps:'30 sec', cue:'Squat, then drive DBs overhead as you stand. Full body. Keeps heart rate elevated.' },
+          { name:'DB Bent-Over Row', sets:'5–6 rounds', reps:'30 sec', cue:'Elbow drives back. Upper back focus. Immediately after lower body movement.' },
+          { name:'Reverse Lunge (alternating)', sets:'5–6 rounds', reps:'30 sec', cue:'Step back, knee hovers, drive through front heel to return. Lower body again.' },
+          { name:'DB Push-Up (hands on DBs)', sets:'5–6 rounds', reps:'30 sec', cue:'DBs as handles. Deeper push-up range at bottom. Upper body again. Squeeze at top.' },
+          { name:'Band Pull-Apart + Overhead Reach', sets:'5–6 rounds', reps:'30 sec', cue:'Pull apart at chest height, then reach band overhead. Active recovery movement that trains shoulders and scapular health.' },
+          { name:'KB Swing (ballistic lower body)', sets:'5–6 rounds', reps:'30 sec', cue:'Pure hip explosion. Keeps HR maximal while training the posterior chain. The single best conditioning tool available.' },
+          { name:'KB Single-Arm Farmer Carry', sets:'5–6 rounds', reps:'30 sec each side', cue:'Heavy KB in one hand, walk with control. Trains grip, anti-lateral-flexion core, shoulder packing, and gait mechanics simultaneously.' },
+        ]
+      },
+      { label:'COOL-DOWN', tag:'hub',
+        note:'3–5 min. Downregulate intentionally.',
+        exercises:[
+          { name:'Physiological Sigh Breathing', sets:'5', reps:'Double inhale + full exhale', cue:'The fastest way to shift from sympathetic to parasympathetic. Do this at end of every session.' },
+        ]
+      }
+    ]
+  },
+  {
+    dow:'Friday', title:'HIIT + Pull — Back, Biceps, Arms',
+    type:'HIIT + Resistance', typeTag:'cav', icon:'⚡', dur:'65–75 min',
+    equipment:['Stationary Bike','Dumbbells','Kettlebell','Z-Bar','Resistance Bands','Bench'],
+    phil:['Huberman: HIIT (Zone 5) targets VO2 max — single greatest predictor of longevity','Cavaliere: Dead hang daily for grip, decompression, and shoulder longevity'],
+    sections:[
+      { label:'HIIT — ZONE 5', tag:'hub',
+        note:'Do HIIT first, while fresh. All-out means ALL out. Huberman: 8–12 rounds.',
+        exercises:[
+          { name:'Stationary Bike Sprints', sets:'8–12 rounds', reps:'20–30 sec sprint / 10 sec rest', cue:'Sprint at 90–100% max HR. The 10-second rest is active (slow pedal), not stopped. Zone 5 — VO2 max training. Uncomfortable is the point.' },
+        ]
+      },
+      { label:'REST TRANSITION + GRIP', tag:'both',
+        note:'Rest 5–10 min after HIIT before starting resistance work. Let HR come down.',
+        exercises:[
+          { name:'Dead Hang', sets:'2', reps:'90 sec each', cue:'Cavaliere recommends this every single morning. Trains grip strength, decompresses the spine, and opens the lats and shoulder capsule. Non-negotiable longevity habit.' },
+        ]
+      },
+      { label:'BACK', tag:'both',
+        note:'Month A: 3–4 sets × 4–8 reps heavy. Month B: 3 sets × 8–15 reps. Choose one exercise at peak contraction (bent row) and one at the stretch (pullover).',
+        exercises:[
+          { name:'KB Single-Arm Row', sets:'3–4/arm', reps:'Per phase', cue:'KB\'s offset center of mass demands more rotational stability than a DB — the lats and rotator cuff work harder to control it. Drive elbow back and high.' },
+          { name:'DB Bent-Over Row (elbows wide)', sets:'3–4', reps:'Per phase', cue:'Elbows flared slightly out — targets upper traps and rhomboids. Squeeze at top, full depression of scapula.' },
+          { name:'DB Single-Arm Row (elbow tight)', sets:'3–4/arm', reps:'Per phase', cue:'Elbow tracks body — hits lats. Support on bench. Big pull with full elbow retraction. Feel the lat contract at peak.' },
+          { name:'DB Pullover (on bench)', sets:'3', reps:'12–15', cue:'Arms slightly bent. Take DB back overhead until you feel a deep lat + serratus stretch. Trains the lat in a fully lengthened position.' },
+          { name:'Band Scap Pulldown (burnout)', sets:'2', reps:'15', cue:'Arms straight, pull band down by depressing scapulas. Trains the back\'s ability to initiate movement from the scapula.' },
+        ]
+      },
+      { label:'ARMS + GRIP + NECK', tag:'hub',
+        note:'Huberman\'s end-of-week arm protocol — indirectly trained all week, now directly targeted.',
+        exercises:[
+          { name:'Z-Bar Curl', sets:'3–4', reps:'Per phase', cue:'Z-bar reduces wrist supination stress. Full ROM — don\'t cheat the top or bottom. Squeeze hard at peak, slow on the way down.' },
+          { name:'DB Incline Curl (lengthened position)', sets:'3', reps:'10–12', cue:'Recline on incline bench, arms hang straight. Curl from full stretch. Highest muscle fiber recruitment — the lengthened-position bicep exercise.' },
+          { name:'DB Hammer Curl', sets:'2', reps:'12–15', cue:'Neutral grip. Trains brachialis (underlying muscle that pushes the bicep up). Alternating or simultaneous.' },
+          { name:'Z-Bar Overhead Tricep Extension', sets:'3–4', reps:'Per phase', cue:'Targets long head of tricep (biggest portion). Full stretch overhead, full lockout. Don\'t let elbows flare wide.' },
+          { name:'Band Tricep Pressdown', sets:'2', reps:'15–20 to burnout', cue:'Anchor band overhead. Elbows pinned to sides. Full extension at bottom. Great peak contraction finisher.' },
+          { name:'KB Double Farmer Carry', sets:'3', reps:'30–40 sec', cue:'Heavy KBs. Walk tall, shoulders packed, core braced. Grip strength is a top longevity biomarker. Most functional grip builder you can do at home.' },
+          { name:'Slant Board Calf Raises', sets:'3', reps:'15–20', cue:'Full stretch at bottom, full contraction at top. 2-sec pause at peak.' },
+          { name:'Band Neck Flexion + Extension', sets:'2', reps:'15 each direction', cue:'Huberman staple — neck training improves posture, reduces injury risk, supports CNS health. Go slowly with control.' },
+        ]
+      }
+    ]
+  },
+  {
+    dow:'Saturday', title:'Full Rest + Circadian Reset',
+    type:'Rest & Recovery', typeTag:'both', icon:'☀️', dur:'Optional 20 min',
+    equipment:[],
+    phil:['Huberman: Morning sunlight within 30 min of waking synchronizes circadian rhythm — foundational, not optional','Cavaliere: Adequate rest is when adaptation happens. Honor it.'],
+    sections:[
+      { label:'HUBERMAN MORNING PROTOCOL', tag:'hub',
+        note:'The rest day is not passive — it\'s a biological reset day. These habits compound your training results.',
+        exercises:[
+          { name:'Morning Sunlight Exposure', sets:'1', reps:'10–30 min', cue:'Outside within 30 min of waking. No sunglasses. Eyes toward (not at) the sun. Sets cortisol pulse, anchors sleep timing, boosts morning alertness and testosterone.' },
+          { name:'Hydration on Waking', sets:'1', reps:'16–32 oz water', cue:'Before coffee. Replenishes fluid lost during sleep. Simple but underestimated.' },
+          { name:'Optional: 20 min Walk Outside', sets:'1', reps:'20 min easy', cue:'Not training — just movement. Zone 1 activity. Speeds glycogen replenishment.' },
+          { name:'Physiological Sigh + Breathwork', sets:'5–10 min', reps:'As needed', cue:'Practice the calming technique on rest days so it becomes automatic during hard training.' },
+        ]
+      },
+      { label:'OPTIONAL GENTLE STRETCH', tag:'mob',
+        note:'Only if the body calls for it. 10–15 min max.',
+        exercises:[
+          { name:'Dead Hang', sets:'1–2', reps:'90 sec', cue:'Daily. Always. Even on rest days.' },
+          { name:'Hip Flexor Stretch + 90/90', sets:'1 per side', reps:'60–90 sec each', cue:'Gentle. Not aggressive. Just maintenance.' },
+        ]
+      }
+    ]
+  }
+];
+
+// ══════════════════════════════════════════════════════════════════
+// RENDER HELPERS
+// ══════════════════════════════════════════════════════════════════
+function tagClass(t) {
+  return { hub:'tag-hub', cav:'tag-cav', both:'tag-both', mob:'tag-mob' }[t] || 'tag-both';
+}
+function tagName(t) {
+  return { hub:'Huberman', cav:'Cavaliere', both:'Hybrid', mob:'Mobility' }[t] || t;
+}
+function typeColor(t) {
+  return { hub:'var(--hub)', cav:'var(--cav)', both:'var(--both)', mob:'var(--mob)' }[t] || 'var(--both)';
+}
+
+// ── Phases Panel ────────────────────────────────────────────────
+function renderPhasesPanel() {
+  return `<div class="panel">
+    <div class="panel-title">Huberman Monthly Alternation</div>
+    <div class="phases">
+      ${Object.values(PHASES).map(p => `
+        <div class="phase-card">
+          <div class="phase-label">${p.label}</div>
+          ${['sets','reps','weight','rest'].map(k => `
+            <div class="phase-row"><span class="pk">${k.charAt(0).toUpperCase()+k.slice(1)}: </span><span class="pv">${p[k]}</span></div>
+          `).join('')}
+          <div class="phase-focus">${p.focus}</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ── Principles Panel ─────────────────────────────────────────────
+function renderPrinciplesPanel() {
+  return `<div class="panel">
+    <div class="panel-title">Core Training Principles</div>
+    ${PRINCIPLES.map(([icon, tag, text]) => `
+      <div class="principle">
+        <span class="p-icon">${icon}</span>
+        <div><span class="tag ${tagClass(tag)}">${tagName(tag)}</span>
+        <div class="p-text">${text}</div></div>
+      </div>`).join('')}
+  </div>`;
+}
+
+// ── Home: Day List ───────────────────────────────────────────────
+function renderDayList() {
+  const list = document.getElementById('day-list');
+  list.innerHTML = DAYS.map((d, i) => `
+    <div class="day-card type-${d.typeTag}" onclick="openDay(${i})">
+      <div class="dc-icon-col">
+        <span class="dc-emoji">${d.icon}</span>
+        <span class="dc-dow">${d.dow.slice(0,3)}</span>
+      </div>
+      <div class="dc-body">
+        <div class="dc-title">${d.title}</div>
+        <div class="dc-meta">
+          <span class="tag ${tagClass(d.typeTag)}">${d.type}</span>
+          <span class="dc-dur">⏱ ${d.dur}</span>
+        </div>
+      </div>
+      <span class="dc-chevron">›</span>
+    </div>`).join('');
+}
+
+// ── Day Screen ───────────────────────────────────────────────────
+function renderDay(i) {
+  const d = DAYS[i];
+  document.getElementById('tb-dow').textContent = d.dow + ' · Day ' + (i+1);
+  document.getElementById('tb-title').textContent = d.title;
+
+  const color = typeColor(d.typeTag);
+  const eqChips = d.equipment.map(e => `<span class="chip">${e}</span>`).join('');
+
+  const sections = d.sections.map((s, si) => {
+    const exRows = s.exercises.map(ex => `
+      <div class="ex-row">
+        <div class="ex-top">
+          <div class="ex-name">${ex.name}</div>
+          <div class="ex-badges">
+            <span class="chip chip-accent">${ex.sets}</span>
+            <span class="chip chip-muted">${ex.reps}</span>
+          </div>
+        </div>
+        <div class="ex-cue">${ex.cue}</div>
+      </div>`).join('');
+
+    return `
+      <div class="sec-card">
+        <div class="sec-header" onclick="toggleSection(this)">
+          <div class="sec-header-left">
+            <span class="tag ${tagClass(s.tag)}">${tagName(s.tag)}</span>
+            <span class="sec-label">${s.label}</span>
+          </div>
+          <span class="sec-chevron">⌄</span>
+        </div>
+        <div class="sec-body">
+          <div class="sec-note">${s.note}</div>
+          ${exRows}
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('day-content').innerHTML = `
+    <div class="overview-card" style="border-left-color:${color}">
+      <div class="ov-top">
+        <div class="ov-icon-tag">
+          <span class="ov-emoji">${d.icon}</span>
+          <span class="tag ${tagClass(d.typeTag)}">${d.type}</span>
+        </div>
+        <span class="chip chip-muted">⏱ ${d.dur}</span>
+      </div>
+      ${d.equipment.length ? `
+        <div class="ov-equipment">
+          <div class="ov-eq-label">Equipment</div>
+          <div class="ov-eq-chips">${eqChips}</div>
+        </div>` : ''}
+      <div class="ov-philosophy">
+        ${d.phil.map(p => `
+          <div class="ov-phil-line">
+            <span class="ov-bullet">▸</span>
+            <span class="ov-phil-text">${p}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="hint">Tap a section to expand</div>
+    ${sections}`;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════════
+function openDay(i) {
+  renderDay(i);
+  const home = document.getElementById('home');
+  const day  = document.getElementById('day');
+  day.scrollTop = 0;
+  home.classList.replace('visible','hidden-left');
+  day.classList.replace('hidden-right','visible');
+}
+
+function goHome() {
+  const home = document.getElementById('home');
+  const day  = document.getElementById('day');
+  home.classList.replace('hidden-left','visible');
+  day.classList.replace('visible','hidden-right');
+}
+
+function toggleSection(header) {
+  const body    = header.nextElementSibling;
+  const chevron = header.querySelector('.sec-chevron');
+  const isOpen  = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INFO PANELS
+// ══════════════════════════════════════════════════════════════════
+function togglePanel(name) {
+  const el  = document.getElementById('panel-' + name);
+  const btn = document.getElementById('btn-' + name);
+  const open = el.style.display === 'none';
+  el.style.display = open ? 'block' : 'none';
+  if (open && !el.innerHTML) {
+    el.innerHTML = name === 'phases' ? renderPhasesPanel() : renderPrinciplesPanel();
+  }
+  btn.classList.toggle('active', open);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// PWA INSTALL
+// ══════════════════════════════════════════════════════════════════
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const banner = document.getElementById('install-banner');
+  if (!localStorage.getItem('install-dismissed')) banner.classList.remove('hidden');
+});
+
+document.getElementById('ib-install-btn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('install-banner').classList.add('hidden');
+});
+
+function dismissInstall() {
+  document.getElementById('install-banner').classList.add('hidden');
+  localStorage.setItem('install-dismissed', '1');
+}
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('install-banner').classList.add('hidden');
+});
+
+// ══════════════════════════════════════════════════════════════════
+// BACK GESTURE (Android back button)
+// ══════════════════════════════════════════════════════════════════
+window.addEventListener('popstate', () => {
+  const day = document.getElementById('day');
+  if (day.classList.contains('visible')) goHome();
+});
+
+function openDay(i) {
+  renderDay(i);
+  history.pushState({ day: i }, '');
+  const home = document.getElementById('home');
+  const day  = document.getElementById('day');
+  day.scrollTop = 0;
+  home.classList.replace('visible','hidden-left');
+  day.classList.replace('hidden-right','visible');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════
+renderDayList();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
