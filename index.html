@@ -346,12 +346,13 @@
     <div class="hero">
       <div class="hero-eyebrow">Huberman × Athlean-X Hybrid Protocol</div>
       <h1 class="hero-title">The Home Performance Program</h1>
-      <p class="hero-subtitle">Science-backed training for strength, longevity &amp; athleticism — built for your home setup.</p>
+      <p class="hero-subtitle">8-week hybrid plan for hypertrophy, core strength, hip &amp; upper-back mobility and VO₂ max — built for your home setup.</p>
       <div class="hero-tags">
-        <span class="tag tag-hub">Zone 2 + Zone 5</span>
-        <span class="tag tag-cav">Injury-Prevention</span>
-        <span class="tag tag-mob">Slant Board Mobility</span>
-        <span class="tag" style="color:var(--accent);background:var(--accent-glow);border-color:color-mix(in srgb,var(--accent) 35%,transparent)">Monthly Phases</span>
+        <span class="tag tag-hub">Hypertrophy</span>
+        <span class="tag tag-both">VO₂ Max · 4×4</span>
+        <span class="tag tag-mob">Hip + T-Spine Mobility</span>
+        <span class="tag tag-cav">Core Strength</span>
+        <span class="tag" style="color:var(--accent);background:var(--accent-glow);border-color:color-mix(in srgb,var(--accent) 35%,transparent)">Superset Format</span>
       </div>
     </div>
 
@@ -408,7 +409,7 @@
 // ══════════════════════════════════════════════════════════════════
 const PHASES = {
   A: { label:'Month A — Strength', sets:'3–4 sets', reps:'4–8 reps', weight:'Heavy (near max)', rest:'2–4 min', focus:'Neural adaptation, tendon strength, raw force production' },
-  B: { label:'Month B — Hypertrophy', sets:'3 sets', reps:'8–15 reps', weight:'Moderate (challenging but controlled)', rest:'90 sec', focus:'Muscle fiber recruitment, metabolic stress, size' }
+  B: { label:'Month B — Hypertrophy', sets:'3 sets', reps:'8–15 reps', weight:'Moderate (challenging but controlled)', rest:'90 sec', focus:'Muscle fiber recruitment, metabolic stress, size. Week 5 = transition week: keep loads conservative as reps rise, then build weeks 6–8' }
 };
 
 const PRINCIPLES = [
@@ -426,205 +427,237 @@ const PRINCIPLES = [
 
 const DAYS = [
   {
-    dow:'Sunday', title:'Zone 2 Endurance + Morning Mobility',
+    dow:'Sunday', title:'Zone 2 Endurance + Hip & Ankle Mobility',
     type:'Cardio + Mobility', typeTag:'both', icon:'🚴', dur:'60–75 min',
-    equipment:['Stationary Bike','Slant Board','Resistance Band','Kettlebell'],
-    phil:['Huberman: Zone 2 builds mitochondrial density & longevity','Cavaliere: Mobility work prevents imbalances & injury'],
+    equipment:['Stationary Bike','Slant Board','Mobility Board','Bosu Ball','Kettlebell'],
+    phil:['Huberman: Zone 2 builds mitochondrial density & aerobic base','Cavaliere: Daily hip + t-spine mobility prevents imbalance & injury'],
     sections:[
       { label:'ZONE 2 CARDIO', tag:'hub',
-        note:'65–75% max HR. Nasal breathing. Maintain conversational pace. 45–60 min.',
+        note:'65–75% max HR. Nasal breathing. Conversational pace the whole way. 45–60 min. Weekly Zone 2 target is ~150–200 min: this ride + Friday\'s swim gets you most of the way — Saturday\'s optional walk and any easy movement count toward the rest.',
         exercises:[
-          { name:'Stationary Bike — Zone 2', sets:'1 continuous', reps:'45–60 min', cue:'Nasal breathing throughout. HR: ~130–150 bpm (220 minus age × 0.70). You should be able to speak in full sentences.' }
+          { name:'Stationary Bike — Zone 2', sets:'1 continuous', reps:'45–60 min', cue:'Nasal breathing throughout. HR ~130–150 bpm. You should be able to speak in full sentences. This is your weekly aerobic base — never let it drift into hard effort.' }
         ]
       },
-      { label:'MORNING MOBILITY FLOW', tag:'mob',
-        note:'Complete after the bike. Do not rush — this is active recovery with a purpose.',
+      { label:'HIP + ANKLE MOBILITY FLOW', tag:'mob',
+        note:'Complete after the bike, while warm. Slow and deliberate — this is active recovery with a purpose. Hits your two priority areas: hips and upper back.',
         exercises:[
-          { name:'Slant Board Calf Stretch', sets:'2', reps:'90 sec each side', cue:'Stand on board, lean forearms into wall, knees straight. Deep Achilles + calf release.' },
-          { name:'Slant Board Jefferson Curl', sets:'2', reps:'8 slow reps', cue:'Light KB or bodyweight. Roll down vertebra-by-vertebra. Decompresses spine, opens posterior chain.' },
-          { name:'Slant Board Hip Flexor Stretch', sets:'2', reps:'45 sec each side', cue:'One foot on high end of board, other knee on ground. Push hips forward. Keep ribs stacked over hips.' },
-          { name:'90/90 Hip Switch', sets:'2', reps:'10 transitions', cue:'Sit on floor, legs at 90°. Rotate hips side to side. Opens internal & external hip rotation.' },
-          { name:'Thoracic Rotation (quadruped)', sets:'2', reps:'12 each side', cue:'Hand behind head. Rotate elbow to ceiling. Primary antidote to desk posture.' },
-          { name:'KB Turkish Get-Up', sets:'2', reps:'3 each side (light)', cue:'The single best full-body mobility + stability drill in existence. Move slowly — each transition is the work. Trains shoulder stability, hip mobility, spinal control, and balance simultaneously.' },
-          { name:'Dead Hang', sets:'2', reps:'60–90 sec', cue:'Passive hang. Spinal decompression + shoulder mobility. Grip health marker. Cavaliere\'s #1 daily non-negotiable.' },
+          { name:'Slant Board Calf Stretch', sets:'2', reps:'90 sec each side', cue:'Stand on board, forearms into wall, knee straight. Deep Achilles + calf release. Ankle range feeds squat depth.' },
+          { name:'Slant Board Hip Flexor Stretch', sets:'2', reps:'45 sec each side', cue:'One foot on high end of board, other knee down. Push hips forward, ribs stacked over hips. Squeeze the rear glute.' },
+          { name:'90/90 Hip Switch', sets:'2', reps:'10 transitions', cue:'Seated, legs at 90°. Rotate hips side to side. Trains internal AND external hip rotation — the foundation of hip mobility.' },
+          { name:'Mobility Board Ankle Rocks', sets:'2', reps:'10 each foot', cue:'Foot on the single-leg mobility board, rock through full ankle range. Restores dorsiflexion for deeper, safer squatting.' },
+          { name:'Bosu Single-Leg Balance Reach', sets:'2', reps:'8 each leg', cue:'Stand one foot on the bosu, reach the free foot forward/side/back and return without touching down. Trains hip stability + proprioception.' },
+          { name:'Thoracic Rotation (quadruped)', sets:'2', reps:'12 each side', cue:'Hand behind head, rotate elbow to ceiling. The primary antidote to desk-and-swim rounded posture. Your upper-back priority movement.' },
+          { name:'Dead Hang', sets:'2', reps:'60–90 sec', cue:'Passive hang. Spinal decompression + shoulder mobility + grip. Cavaliere\'s #1 daily non-negotiable.' },
         ]
       }
     ]
   },
   {
-    dow:'Monday', title:'Legs — Slant Board Protocol',
-    type:'Resistance Training', typeTag:'cav', icon:'🦵', dur:'55–70 min',
-    equipment:['Slant Board','Dumbbells','Kettlebell','Bench','Loop Bands'],
-    phil:['Huberman: Alternate monthly between 4–8 reps (strength) and 8–15 reps (hypertrophy)','Cavaliere: Primer first, compound movements, full ROM, joint-safe loading'],
+    dow:'Monday', title:'Legs — Glutes, Hips & Hamstrings',
+    type:'Resistance Training', typeTag:'cav', icon:'🦵', dur:'60–75 min',
+    equipment:['Slant Board','Dumbbells','Kettlebell','Bench','Loop Bands','Sliding Discs','Bosu Ball','Mobility Board'],
+    phil:['Huberman: Alternate monthly — 4–8 reps (strength) vs 8–15 reps (hypertrophy)','Cavaliere: Dedicated glute med + hip work protects knees, back & keeps hips strong'],
     sections:[
       { label:'WARM-UP PRIMER', tag:'cav',
-        note:'2 sets each. Sub-maximal. Prepares VMO, glutes, and hip stabilizers.',
+        note:'2 sets each, sub-maximal. Wakes up glutes, VMO and hip stabilizers before you load them.',
         exercises:[
-          { name:'KB Swing (hip hinge primer)', sets:'2', reps:'10', cue:'Light-moderate KB. Hip HINGE not a squat — hike bell back between legs, snap hips forward explosively. Primes glutes and hamstrings perfectly before loading.' },
-          { name:'Loop Band Hip Circles', sets:'2', reps:'15 each direction', cue:'Band just above knees. Activate glute med before any loading.' },
-          { name:'Slant Board ATG Hold (deep squat)', sets:'2', reps:'30–45 sec hold', cue:'Feet on board, drop into deepest comfortable squat. Hands in front for balance. Assess your range.' },
-          { name:'Leg Swings (forward/lateral)', sets:'1', reps:'10 each direction/leg', cue:'Dynamic. Hip joint mobilization before loading.' },
+          { name:'KB Swing (hip hinge primer)', sets:'2', reps:'10', cue:'Light-moderate KB. Hip HINGE, not a squat — hike the bell back, snap hips forward. Primes glutes and hamstrings.' },
+          { name:'Hip Capsule Mobilization (ext. rotation + flexion)', sets:'2', reps:'8 each side', cue:'Cavaliere\'s squat-depth fix. On all fours, drive one hip into external rotation + flexion, rock back gently. Opens the hip capsule where most restriction lives.' },
+          { name:'Loop Band Hip Circles', sets:'2', reps:'15 each direction', cue:'Band just above knees. Fire the glute med before any loading.' },
+          { name:'Mobility Board Ankle Rocks', sets:'2', reps:'10 each foot', cue:'Restore dorsiflexion so you can hit depth safely.' },
         ]
       },
-      { label:'MAIN WORK', tag:'both',
-        note:'Month A: 3–4 sets × 4–8 reps, 2–4 min rest, heavy. Month B: 3 sets × 8–15 reps, 90 sec rest, moderate.',
+      { label:'COMPOUND SERIES (SUPERSET)', tag:'both',
+        note:'SUPERSET FORMAT — do A1 then immediately A2, rest 60–90 sec, repeat for the rounds shown. Each lift is paired with a balance or hip-mobility drill so you build size AND mobility at once. Reps: Month A 4–8 heavy / Month B 8–15 moderate.',
         exercises:[
-          { name:'Slant Board Goblet Squat', sets:'3–4', reps:'Per phase', cue:'Hold KB or DB at chest. Heels elevated on slant board. Drive knees out over toes. Full depth. Pause at bottom for max quad recruitment.' },
-          { name:'Bulgarian Split Squat (front foot on slant board)', sets:'3–4/leg', reps:'Per phase', cue:'Rear foot elevated on bench, front foot on slant board. Targets VMO aggressively. Keep torso upright. Slow eccentric (3 sec down).' },
-          { name:'Romanian Deadlift (DBs or KB)', sets:'3–4', reps:'Per phase', cue:'Hip hinge, soft knee bend. Feel hamstring stretch at bottom. Two DBs, one heavier DB, or a heavy KB. Full hip lock at top.' },
-          { name:'KB Goblet Squat (slant board option)', sets:'2', reps:'10–12 slow', cue:'Hold KB at chest. Use slant board for deeper range or flat ground for more ankle challenge. Great technique builder.' },
-          { name:'Slant Board ATG Split Squat', sets:'3/leg', reps:'8–12', cue:'Back knee drops close to floor. Pure quad + knee tendon strengthening. Light load or bodyweight. The longevity movement.' },
-          { name:'Nordic Hamstring Curl (bench anchor)', sets:'3', reps:'4–8 (assisted)', cue:'Feet anchored under bench. Lower body toward floor with control. Use hands to assist up. Unrivaled eccentric hamstring strength.' },
-          { name:'Slant Board Calf Raises', sets:'3', reps:'15–20 slow', cue:'Full range — deep stretch at bottom, full contraction at top. 2-sec hold at peak.' },
-          { name:'Loop Band Lateral Walks', sets:'2', reps:'15 steps each way', cue:'Band above knees. Hips back, knees out. Glute med isolation. Cavaliere staple for knee alignment.' },
+          { name:'A1 · Bulgarian Split Squat (front foot on slant board)', sets:'3–4 / leg', reps:'Per phase', cue:'Rear foot on bench, front foot on slant board. Hammers the VMO and glute. Torso tall, slow 3-sec eccentric.' },
+          { name:'A2 · Single-Leg Balance Reach (mobility board / bosu)', sets:'3–4 / leg', reps:'8 reps', cue:'Straight into balance work on the fatigued leg. Reach the free foot out and back without touching down. Builds ankle + hip stability under fatigue.' },
+          { name:'B1 · Slant Board Goblet Squat', sets:'3–4', reps:'Per phase', cue:'Hold KB/DB at chest, heels elevated on slant board. Drive knees out, full depth, pause at the bottom for max quad recruitment.' },
+          { name:'B2 · Bosu Squat-to-Balance Hold', sets:'3–4', reps:'30–45 sec', cue:'DOME SIDE UP — never stand on the flat side. Squat down, stand and hold a two-leg or single-leg balance on the dome. Trains the stabilizers the loaded squat never touches.' },
+          { name:'C1 · Romanian Deadlift (DBs or KB)', sets:'3–4', reps:'Per phase', cue:'Hip hinge, soft knees. Feel the hamstring stretch at the bottom, full hip lock at the top. Lengthened-position hamstring loading.' },
+          { name:'C2 · 90/90 Hip Switch', sets:'3–4', reps:'8 transitions', cue:'Active hip-rotation mobility between heavy hinge sets. Keeps the hips fresh and mobile under load.' },
+        ]
+      },
+      { label:'GLUTE · GLUTE MED · HAMSTRING', tag:'cav',
+        note:'Targeted posterior-chain + hip block. This is where glute med and hamstring strength get built directly. Supersets again: D1→D2, E1→E2.',
+        exercises:[
+          { name:'D1 · Single-Leg Hip Thrust (bench-supported)', sets:'3', reps:'10–12 / side', cue:'Shoulders on bench, drive through one heel, full hip lockout, squeeze the glute hard at the top. The single best glute builder you can do at home.' },
+          { name:'D2 · Loop Band Lateral Walk', sets:'3', reps:'15 steps each way', cue:'Band above knees, hips back, knees out. Pure glute med isolation — Cavaliere staple for knee alignment and hip strength.' },
+          { name:'E1 · Slider Hamstring Curl (sliding discs)', sets:'3', reps:'10–12', cue:'Supine bridge, heels on the sliding discs. Hold the bridge, slide heels out to straight then curl them back to your glutes. Brutal eccentric hamstring work — your discs make this possible at home.' },
+          { name:'E2 · Side Plank + Top-Leg Lift', sets:'3', reps:'30–45 sec / side', cue:'Cavaliere\'s glute-med + lateral-core builder. Hold the side plank and raise the top leg — challenges hip abduction and anti-lateral-flexion core together.' },
+          { name:'F1 · Slant Board Calf Raises', sets:'3', reps:'15–20 slow', cue:'Full range — deep stretch at the bottom of the board, full contraction with a 2-sec hold at the top. Calves respond to range and time under tension.' },
+          { name:'F2 · Tibialis Raises', sets:'3', reps:'15–20', cue:'Heels on the slant board edge, toes hanging — pull toes up toward shins. The antagonist to the calf raise (perfect superset pair) and Cavaliere\'s go-to for knee + shin resilience.' },
+          { name:'Clamshells (loop band)', sets:'2', reps:'15 / side', cue:'Optional burnout. Band above knees, feet together, open the top knee. Isolates glute med to finish the hips off.' },
         ]
       },
       { label:'CONDITIONING FINISHER', tag:'cav',
-        note:'Cavaliere PHAT protocol — tracks cardiovascular recovery speed.',
+        note:'Short posterior-chain + cardio hit to close. Keeps HR recovery sharp.',
         exercises:[
-          { name:'KB Swing Finisher', sets:'4 rounds', reps:'15 swings / 30 sec rest', cue:'Moderate-heavy KB. All hip drive, no arm pull. Ballistic movement — maximum power per rep. Excellent cardiovascular + posterior chain finisher.' },
-          { name:'Stationary Bike PHAT', sets:'2–3 rounds', reps:'30 sec hard / 60 sec easy', cue:'Sprint at 85–90% max HR for 30 sec, recover on easy pedal. Track how quickly HR returns to within 10% of resting.' },
+          { name:'KB Swing Finisher', sets:'4 rounds', reps:'15 swings / 30 sec rest', cue:'Moderate-heavy KB, all hip drive. Ballistic power + posterior chain + cardio in one.' },
+          { name:'Stationary Bike PHAT', sets:'2–3 rounds', reps:'30 sec hard / 60 sec easy', cue:'Sprint at 85–90% for 30 sec, recover easy. Track how fast HR drops — a fitness marker over the 8 weeks.' },
         ]
       }
     ]
   },
   {
-    dow:'Tuesday', title:'Recovery: Cold Plunge + Deep Mobility',
+    dow:'Tuesday', title:'Recovery: Cold + Deep Hip & Upper-Back Mobility',
     type:'Recovery', typeTag:'both', icon:'🧊', dur:'45–60 min',
-    equipment:['Cold Plunge','Slant Board','Resistance Band','Kettlebell'],
-    phil:['Huberman: Cold exposure 6–8 hrs post-resistance training — NOT immediately after (limits hypertrophy signal)','Cavaliere: Active recovery days preserve athleticism & movement quality'],
+    equipment:['Cold Plunge','Slant Board','Foam Roller','Lacrosse Ball','Resistance Band','Kettlebell'],
+    phil:['Huberman: Cold exposure 6–8 hrs AFTER lifting — never right after (blunts hypertrophy)','Cavaliere: Deliberate hip + thoracic mobility is your fastest path to pain-free training'],
     sections:[
       { label:'DELIBERATE COLD EXPOSURE', tag:'hub',
-        note:'2–3 rounds. Start conservatively. Never cold plunge within 6–8 hrs of finishing a resistance session.',
+        note:'2–3 rounds. Start conservative. Never within 6–8 hrs of a resistance session (Mon/Thu/Fri lifting) — that\'s why cold lives on this day.',
         exercises:[
-          { name:'Hot Shower → Cold Plunge', sets:'2–3 rounds', reps:'3–5 min cold / 5 min warm', cue:'Cold: aim for 50–60°F. Try to stay still. Use physiological sigh (double inhale, full exhale) to regulate stress response. Stay present — don\'t numb out.' },
-          { name:'Physiological Sigh Practice', sets:'5–10', reps:'Between cold rounds', cue:'2 sharp nasal inhales followed by one long, complete exhale. Fastest known way to downregulate the nervous system.' },
+          { name:'Hot → Cold Plunge', sets:'2–3 rounds', reps:'3–5 min cold / 5 min warm', cue:'Cold 50–60°F. Stay as still as you can. Use physiological sighs to regulate. Aim for ~11 min total cold across the week.' },
+          { name:'Physiological Sigh Practice', sets:'5–10', reps:'Between rounds', cue:'Two sharp nasal inhales, one long full exhale. Fastest way to downshift the nervous system.' },
         ]
       },
-      { label:'DEEP MOBILITY SESSION', tag:'mob',
-        note:'This is intentional therapeutic work. Move slowly and breathe into each position.',
+      { label:'SOFT-TISSUE RELEASE', tag:'mob',
+        note:'Foam roller + lacrosse ball first — release tissue before you mobilize the joint. 60–90 sec per area.',
         exercises:[
-          { name:'KB Halo', sets:'2', reps:'8 each direction', cue:'Light KB. Circle the bell slowly around your head, keeping core braced. Trains shoulder mobility through full circumduction, thoracic rotation, and grip.' },
-          { name:'KB Windmill', sets:'2', reps:'5 each side (light)', cue:'KB pressed overhead, push hip out, slide free hand down inner leg. Combines hip mobility, shoulder stability, and thoracic rotation. Move extremely slowly.' },
-          { name:'World\'s Greatest Stretch', sets:'2', reps:'5 each side', cue:'Lunge forward, same-side elbow to floor, rotate open. Opens hip flexor, thoracic spine, and hamstring simultaneously.' },
-          { name:'Pigeon Pose', sets:'2', reps:'90 sec each side', cue:'Sink hips evenly. Breathe into external hip rotation. Addresses piriformis tightness that causes knee + low back issues.' },
-          { name:'Couch Stretch', sets:'2', reps:'90 sec each side', cue:'Rear shin elevated against wall. Most people\'s #1 hip flexor deficiency. Squeeze glute of rear leg.' },
-          { name:'Shoulder CARs', sets:'2', reps:'5 each direction/shoulder', cue:'Slow, full-range shoulder circles. Move through end range with control. Cavaliere-endorsed joint maintenance.' },
-          { name:'Thoracic Extension over Bench', sets:'2', reps:'10–12', cue:'Drape upper back over bench edge, arms crossed on chest. Segment by segment extension. Reverses kyphosis from sitting.' },
-          { name:'Slant Board Hamstring Stretch', sets:'2', reps:'30–45 sec each side', cue:'Toes on top of board, lean toward toes with neutral spine. Hip hinge, not spinal flexion.' },
-          { name:'Ankle Circles on Slant Board', sets:'2', reps:'15 circles each direction/foot', cue:'Standing on board, slow ankle circles. Ankle mobility is the foundation of squat depth and knee health.' },
-          { name:'Dead Hang', sets:'2', reps:'60–90 sec', cue:'Full shoulder elevation at top. Decompresses spine, opens lats, trains grip. Do this every single day.' },
+          { name:'Foam Roller — Thoracic Spine', sets:'1', reps:'60–90 sec', cue:'Roller under upper back, hands behind head, extend over it segment by segment. Directly targets your upper-back priority.' },
+          { name:'Foam Roller — Quads & Glutes', sets:'1', reps:'60–90 sec / side', cue:'Slow passes, pause on tender spots and breathe. Preps the hips for deep stretching.' },
+          { name:'Lacrosse Ball — Glute / Piriformis', sets:'1', reps:'60–90 sec / side', cue:'Sit on the ball, hunt the tight spot in the deep hip. Releases the piriformis that drives knee + low-back issues.' },
+        ]
+      },
+      { label:'DEEP MOBILITY: HIPS + UPPER BACK', tag:'mob',
+        note:'The core of the day. Move slowly, breathe into each position. This is your dedicated block for the two areas you most want to improve.',
+        exercises:[
+          { name:'Door Splat (hip flexor + thoracic)', sets:'2', reps:'45 sec / side', cue:'Cavaliere favorite. Slide through a doorway, hands on the frame, reach up and drive the chest through. Opens hip flexors AND the thoracic spine at once.' },
+          { name:'Hip Capsule Mobilization (ext. rotation + flexion)', sets:'2', reps:'8 / side', cue:'On all fours, rock the hip into external rotation + flexion. The deepest fix for restricted squat depth.' },
+          { name:'Thread-the-Needle', sets:'2', reps:'10 / side', cue:'Quadruped, slide one arm under the opposite side, then reach it to the ceiling. Pure thoracic rotation for your upper back.' },
+          { name:'QL Slide', sets:'2', reps:'30–45 sec / side', cue:'Side-lying reach to lengthen the quadratus lumborum. Relieves low-back tightness from swimming and sitting.' },
+          { name:'Pigeon Pose', sets:'2', reps:'90 sec / side', cue:'Sink hips evenly, breathe into external hip rotation. Addresses the deep hip tightness swimmers accumulate.' },
+          { name:'Couch Stretch', sets:'2', reps:'90 sec / side', cue:'Rear shin against the wall, squeeze the rear glute. The #1 hip-flexor opener for people who sit.' },
+          { name:'Thoracic Extension over Bench', sets:'2', reps:'10–12', cue:'Drape upper back over the bench edge, arms crossed, extend segment by segment. Reverses the rounded swim/desk posture.' },
+          { name:'Dead Hang', sets:'2', reps:'60–90 sec', cue:'Decompresses the spine, opens the lats and shoulder capsule. Do it every day.' },
         ]
       }
     ]
   },
   {
-    dow:'Wednesday', title:'Push — Chest, Shoulders, Triceps',
-    type:'Resistance Training', typeTag:'cav', icon:'💪', dur:'55–65 min',
-    equipment:['Dumbbells','Kettlebell','Bench','Resistance Bands','Z-Bar'],
-    phil:['Huberman: Choose 2 exercises per muscle — one at peak contraction, one at full stretch','Cavaliere: Warm the shoulder joint BEFORE any pressing — never load cold'],
+    dow:'Wednesday', title:'VO₂ Max — Norwegian 4×4 + Core',
+    type:'Cardio + Core', typeTag:'hub', icon:'🫀', dur:'45–55 min',
+    equipment:['Stationary Bike','Resistance Band'],
+    phil:['Rhonda Patrick: The Norwegian 4×4 is the gold-standard protocol for raising VO₂ max','Huberman: VO₂ max is among the strongest predictors of long-term health'],
     sections:[
-      { label:'SHOULDER PRIMER', tag:'cav',
-        note:'Non-negotiable. Almost every chest injury happens in a shoulder that wasn\'t warmed up first.',
+      { label:'WARM-UP', tag:'hub',
+        note:'Do not skip — you need to be genuinely warm before the first hard interval.',
         exercises:[
-          { name:'KB Halo', sets:'2', reps:'8 each direction', cue:'Light KB. Slow circles around the head. Warms up the entire shoulder girdle and cervical spine. Far superior to generic arm circles for pre-press preparation.' },
-          { name:'Band Pull-Aparts', sets:'2', reps:'15–20', cue:'Arms straight, pull band apart to chest level. Activates posterior deltoid + rhomboids. Counteracts internal rotation from pressing.' },
-          { name:'Band Face Pulls', sets:'2', reps:'15', cue:'Elbow high, pull to forehead level. External rotation of the shoulder. Cavaliere\'s #1 corrective exercise for long-term shoulder health.' },
-          { name:'Arm Circles + Shoulder CARs', sets:'1', reps:'10 each direction', cue:'Dynamic. Gets synovial fluid flowing in joint before loading.' },
+          { name:'Bike — Progressive Warm-Up', sets:'1', reps:'8–10 min', cue:'Start easy, build gradually. By the last 2 minutes your legs and lungs should feel ready to work hard.' },
         ]
       },
-      { label:'CHEST + SHOULDERS', tag:'both',
-        note:'Month A: 3–4 sets × 4–8 reps, heavy, 2–4 min rest. Month B: 3 sets × 8–15 reps, 90 sec rest.',
+      { label:'NORWEGIAN 4×4 INTERVALS', tag:'hub',
+        note:'THE main event. 4 minutes hard, 3 minutes easy, repeated 4 times (~28 min). This is the protocol Rhonda Patrick calls the gold standard for VO₂ max.',
         exercises:[
-          { name:'KB Single-Arm Clean & Press', sets:'3', reps:'6–8 each side', cue:'Clean the KB to rack position (fist at chest, elbow tucked), then press overhead. Full-body power movement — hip drive into shoulder strength. Trains shoulder stability under dynamic load in a way DBs cannot replicate.' },
-          { name:'DB Flat Bench Press', sets:'3–4', reps:'Per phase', cue:'Full ROM — let DBs stretch your chest at the bottom. Drive through heels. Leg drive stabilizes everything above it. Touch DBs at top for peak contraction.' },
-          { name:'DB Incline Press (30–45°)', sets:'3–4', reps:'Per phase', cue:'Emphasizes upper chest + anterior delt. Slow eccentric (3 sec down). Feel the stretch at bottom, not just the press.' },
-          { name:'DB Overhead Press', sets:'3–4', reps:'Per phase', cue:'Full lockout overhead for peak contraction. Elbows slightly forward — not flared wide (reduces shoulder impingement).' },
-          { name:'DB Lateral Raise (slow eccentric)', sets:'3', reps:'12–15', cue:'Raise to just below shoulder height. 3-second lower. "Pinky high" technique for better medial delt isolation.' },
-          { name:'DB Rear Delt Row (Urlacher variation)', sets:'3', reps:'12–15', cue:'Elbow drives back and behind your body. Elbow extension behind the body is what lights up the rear delt. Critical for shoulder balance.' },
-          { name:'Band Face Pulls (working sets)', sets:'3', reps:'15–20', cue:'Heavier band. Every push day should have this. Non-negotiable for long-term shoulder health.' },
+          { name:'Work Interval', sets:'4 rounds', reps:'4 min @ 85–95% max HR', cue:'Hard but sustainable for the full 4 minutes — the last minute should be genuinely tough. By round 3–4 it should feel brutal. That discomfort is exactly the VO₂ max stimulus.' },
+          { name:'Active Recovery', sets:'4 rounds', reps:'3 min @ 60–70% max HR', cue:'Easy pedal to let HR come down before the next interval. Do NOT stop completely — keep moving.' },
         ]
       },
-      { label:'TRICEPS BURNOUT', tag:'cav',
-        note:'Indirect tricep work from pressing is significant — supplemental work here is focused and brief.',
+      { label:'CORE IN RECOVERY WINDOWS', tag:'both',
+        note:'Core only in recoveries 1–2 — the FIRST ~45–60 sec, then back on the bike easy. Recoveries 3–4 are full easy spins so your last intervals stay at 85–95% (the intervals are the priority; core is the passenger). If any interval quality drops, skip in-recovery core entirely and do the full circuit after the cool-down instead.',
         exercises:[
-          { name:'Z-Bar Skull Crusher (on bench)', sets:'3', reps:'10–12', cue:'Lower bar behind head slightly (overhead position) to hit the long head of the tricep — largest portion. Z-bar reduces wrist strain vs. straight bar.' },
-          { name:'Diamond Push-Up (to failure)', sets:'2', reps:'AMRAP', cue:'Hands close together, elbows track back. Full lockout at top. Go to honest failure.' },
-        ]
-      }
-    ]
-  },
-  {
-    dow:'Thursday', title:'Moderate Cardio + Athletic Conditioning',
-    type:'Cardio + Conditioning', typeTag:'both', icon:'🔥', dur:'50–60 min',
-    equipment:['Stationary Bike','Dumbbells','Kettlebell','Resistance Bands'],
-    phil:['Huberman: Moderate cardio (75–80% max HR) for 35 min bridges Zone 2 and Zone 5 adaptations','Cavaliere: PHAT circuits build cardiovascular fitness AND muscular endurance simultaneously'],
-    sections:[
-      { label:'MODERATE CARDIO', tag:'hub',
-        note:'Faster than Zone 2 — you should NOT be able to hold a conversation comfortably here.',
-        exercises:[
-          { name:'Stationary Bike — Moderate Intensity', sets:'1 continuous', reps:'30–35 min', cue:'75–80% max HR. Steady, sustained effort. Not a sprint, not a stroll. Bridges aerobic and anaerobic systems.' },
-        ]
-      },
-      { label:'PHAT CONDITIONING CIRCUIT', tag:'cav',
-        note:'Peripheral Heart Action Training. Alternates upper/lower to keep blood moving. 30 sec per exercise, no rest between. Rest 90 sec between rounds. 5–6 rounds.',
-        exercises:[
-          { name:'DB Squat to Press', sets:'5–6 rounds', reps:'30 sec', cue:'Squat, then drive DBs overhead as you stand. Full body. Keeps heart rate elevated.' },
-          { name:'DB Bent-Over Row', sets:'5–6 rounds', reps:'30 sec', cue:'Elbow drives back. Upper back focus. Immediately after lower body movement.' },
-          { name:'Reverse Lunge (alternating)', sets:'5–6 rounds', reps:'30 sec', cue:'Step back, knee hovers, drive through front heel to return. Lower body again.' },
-          { name:'DB Push-Up (hands on DBs)', sets:'5–6 rounds', reps:'30 sec', cue:'DBs as handles. Deeper push-up range at bottom. Upper body again. Squeeze at top.' },
-          { name:'Band Pull-Apart + Overhead Reach', sets:'5–6 rounds', reps:'30 sec', cue:'Pull apart at chest height, then reach band overhead. Active recovery movement that trains shoulders and scapular health.' },
-          { name:'KB Swing (ballistic lower body)', sets:'5–6 rounds', reps:'30 sec', cue:'Pure hip explosion. Keeps HR maximal while training the posterior chain. The single best conditioning tool available.' },
-          { name:'KB Single-Arm Farmer Carry', sets:'5–6 rounds', reps:'30 sec each side', cue:'Heavy KB in one hand, walk with control. Trains grip, anti-lateral-flexion core, shoulder packing, and gait mechanics simultaneously.' },
+          { name:'Recovery 1 · Pallof Press (band)', sets:'1', reps:'8–10 / side', cue:'Band anchored at chest height, press straight out and resist the rotation. Anti-rotation core.' },
+          { name:'Recovery 2 · Deadbug', sets:'1', reps:'8–10 / side', cue:'Low back flat, extend opposite arm and leg slowly. Trains core control without spinal loading.' },
+          { name:'Recoveries 3–4 · Easy Spin Only', sets:'2', reps:'full 3 min each', cue:'No core here — clear the legs and drop HR so intervals 3 and 4 hit the true VO₂ max zone. These are the rounds that matter most.' },
+          { name:'Post Cool-Down · Side Plank', sets:'2', reps:'30–40 sec / side', cue:'Stack the hips, squeeze the glute. Lateral core + hip stability, done once the intervals are safely banked.' },
         ]
       },
       { label:'COOL-DOWN', tag:'hub',
-        note:'3–5 min. Downregulate intentionally.',
+        note:'Downshift intentionally after hard work.',
         exercises:[
-          { name:'Physiological Sigh Breathing', sets:'5', reps:'Double inhale + full exhale', cue:'The fastest way to shift from sympathetic to parasympathetic. Do this at end of every session.' },
+          { name:'Physiological Sigh + Easy Spin', sets:'5', reps:'3–5 min', cue:'Double nasal inhale, long exhale, while pedaling easy. Shifts you from sympathetic to parasympathetic and speeds recovery.' },
         ]
       }
     ]
   },
   {
-    dow:'Friday', title:'HIIT + Pull — Back, Biceps, Arms',
-    type:'HIIT + Resistance', typeTag:'cav', icon:'⚡', dur:'65–75 min',
-    equipment:['Stationary Bike','Dumbbells','Kettlebell','Z-Bar','Resistance Bands','Bench'],
-    phil:['Huberman: HIIT (Zone 5) targets VO2 max — single greatest predictor of longevity','Cavaliere: Dead hang daily for grip, decompression, and shoulder longevity'],
+    dow:'Thursday', title:'Push — Chest, Shoulders & Triceps',
+    type:'Resistance Training', typeTag:'cav', icon:'💪', dur:'60–70 min',
+    equipment:['Dumbbells','Kettlebell','Bench','Resistance Bands','Z-Bar','Slant Board'],
+    phil:['Huberman: Two exercises per muscle — one at full stretch, one at peak contraction','Cavaliere: Warm the shoulder BEFORE pressing — never load a cold joint'],
     sections:[
-      { label:'HIIT — ZONE 5', tag:'hub',
-        note:'Do HIIT first, while fresh. All-out means ALL out. Huberman: 8–12 rounds.',
+      { label:'SHOULDER PRIMER', tag:'cav',
+        note:'Non-negotiable. Almost every chest/shoulder injury happens in a joint that wasn\'t warmed first.',
         exercises:[
-          { name:'Stationary Bike Sprints', sets:'8–12 rounds', reps:'20–30 sec sprint / 10 sec rest', cue:'Sprint at 90–100% max HR. The 10-second rest is active (slow pedal), not stopped. Zone 5 — VO2 max training. Uncomfortable is the point.' },
+          { name:'KB Halo', sets:'2', reps:'8 each direction', cue:'Light KB, slow circles around the head. Warms the whole shoulder girdle far better than arm circles.' },
+          { name:'Band Pull-Aparts', sets:'2', reps:'15–20', cue:'Arms straight, pull the band to your chest. Activates rear delts + rhomboids, counteracts pressing.' },
+          { name:'Band Face Pulls', sets:'2', reps:'15', cue:'Elbows high, pull to forehead. External rotation — Cavaliere\'s #1 shoulder-health corrective.' },
+          { name:'Shoulder CARs', sets:'1', reps:'5 each direction', cue:'Slow, full-range shoulder circles. Gets synovial fluid moving before loading.' },
         ]
       },
-      { label:'REST TRANSITION + GRIP', tag:'both',
-        note:'Rest 5–10 min after HIIT before starting resistance work. Let HR come down.',
+      { label:'CHEST — STRETCH & CONTRACTION (SUPERSET)', tag:'both',
+        note:'SUPERSET: press then straight into the paired upper-back drill. Chest is trained through BOTH a stretched position (bench/incline) and a peak contraction (fly) per Huberman. Reps: Month A 4–8 heavy / Month B 8–15 moderate.',
         exercises:[
-          { name:'Dead Hang', sets:'2', reps:'90 sec each', cue:'Cavaliere recommends this every single morning. Trains grip strength, decompresses the spine, and opens the lats and shoulder capsule. Non-negotiable longevity habit.' },
+          { name:'A1 · DB Flat Bench Press', sets:'3–4', reps:'Per phase', cue:'Let the DBs stretch the chest at the bottom (lengthened loading), drive up and touch at the top. Leg drive stabilizes everything.' },
+          { name:'A2 · Thoracic Rotation (quadruped)', sets:'3–4', reps:'10 / side', cue:'Rotate elbow to ceiling between press sets. Keeps the upper back mobile while the chest recovers.' },
+          { name:'B1 · DB Incline Press (30–45°)', sets:'3–4', reps:'Per phase', cue:'Upper chest + front delt. Slow 3-sec eccentric, feel the stretch at the bottom.' },
+          { name:'B2 · Thoracic Extension over Bench', sets:'3–4', reps:'8–10', cue:'You\'re already at the bench — drape the upper back over its edge, arms crossed, extend segment by segment. T-spine mobility with zero relocation between sets. (Door splat stays on Tuesday.)' },
+          { name:'C1 · Band Chest Fly / DB Squeeze Press', sets:'3', reps:'12–15', cue:'The peak-contraction chest movement — squeeze hard at the top where bench can\'t load you. Completes the stretch-and-contract pairing for chest.' },
+          { name:'C2 · Wall Slide (scapular)', sets:'3', reps:'10', cue:'Back to wall, slide arms overhead keeping contact. Trains scapular upward rotation + thoracic extension.' },
         ]
       },
-      { label:'BACK', tag:'both',
-        note:'Month A: 3–4 sets × 4–8 reps heavy. Month B: 3 sets × 8–15 reps. Choose one exercise at peak contraction (bent row) and one at the stretch (pullover).',
+      { label:'SHOULDERS — ALL THREE HEADS', tag:'both',
+        note:'Front, side and rear delts each get direct work. Supersetted with upper-back mobility so the shoulders stay healthy.',
         exercises:[
-          { name:'KB Single-Arm Row', sets:'3–4/arm', reps:'Per phase', cue:'KB\'s offset center of mass demands more rotational stability than a DB — the lats and rotator cuff work harder to control it. Drive elbow back and high.' },
-          { name:'DB Bent-Over Row (elbows wide)', sets:'3–4', reps:'Per phase', cue:'Elbows flared slightly out — targets upper traps and rhomboids. Squeeze at top, full depression of scapula.' },
-          { name:'DB Single-Arm Row (elbow tight)', sets:'3–4/arm', reps:'Per phase', cue:'Elbow tracks body — hits lats. Support on bench. Big pull with full elbow retraction. Feel the lat contract at peak.' },
-          { name:'DB Pullover (on bench)', sets:'3', reps:'12–15', cue:'Arms slightly bent. Take DB back overhead until you feel a deep lat + serratus stretch. Trains the lat in a fully lengthened position.' },
-          { name:'Band Scap Pulldown (burnout)', sets:'2', reps:'15', cue:'Arms straight, pull band down by depressing scapulas. Trains the back\'s ability to initiate movement from the scapula.' },
+          { name:'D1 · DB Overhead Press', sets:'3–4', reps:'Per phase', cue:'FRONT delt. Full lockout overhead for peak contraction, elbows slightly forward (not flared) to protect the joint.' },
+          { name:'D2 · Band Face Pull', sets:'3–4', reps:'15', cue:'Every push day gets this. Non-negotiable for long-term shoulder health.' },
+          { name:'E1 · DB Lateral Raise (slow eccentric)', sets:'3', reps:'12–15', cue:'SIDE delt — the head that builds shoulder width. Raise to just below shoulder height, 3-sec lower, "pinky high".' },
+          { name:'E2 · Dead Hang', sets:'3', reps:'60–90 sec', cue:'Decompress between raise sets. Grip + shoulder capsule health.' },
+          { name:'F1 · DB Rear Delt Row (Urlacher)', sets:'3', reps:'12–15', cue:'REAR delt. Elbow drives back and behind the body — that\'s what lights up the rear delt. Critical for balanced, healthy shoulders.' },
+          { name:'F2 · Thread-the-Needle', sets:'3', reps:'10 / side', cue:'Thoracic rotation to finish. Keeps the upper back loose after all the pressing.' },
+        ]
+      },
+      { label:'TRICEPS', tag:'cav',
+        note:'Pressing already hit triceps hard — this is focused, brief long-head work.',
+        exercises:[
+          { name:'G1 · Z-Bar Skull Crusher', sets:'3', reps:'10–12', cue:'Lower slightly behind the head to load the long head (biggest part). Z-bar spares the wrists.' },
+          { name:'G2 · Diamond Push-Up (to failure)', sets:'2', reps:'AMRAP', cue:'Hands close, elbows track back, full lockout. Honest failure to finish.' },
+        ]
+      }
+    ]
+  },
+  {
+    dow:'Friday', title:'AM Swim + PM Pull, Arms & Grip',
+    type:'Swim + Resistance', typeTag:'both', icon:'🏊', dur:'AM 45–60 min · PM 55–70 min',
+    equipment:['Dumbbells','Kettlebell','Z-Bar','Resistance Bands','Bench','Sliding Discs','Mobility Board'],
+    phil:['Huberman: Space hard efforts — swim AM, lift PM, and skip extra sprints (Wed already trained VO₂ max)','Cavaliere: Dead hang daily for grip, decompression and shoulder longevity'],
+    sections:[
+      { label:'AM SWIM — ZONE 2 · 7:00 AM', tag:'hub',
+        note:'Your fixed Friday swim. Kept as steady aerobic + technique work, NOT an all-out effort — you\'re lifting later today.',
+        exercises:[
+          { name:'Swim — Zone 2 / Technique', sets:'1', reps:'45–60 min', cue:'Smooth, controlled pace. Focus on stroke quality and long exhales. Leaves plenty in the tank for the PM pull session.' },
+        ]
+      },
+      { label:'PM WARM-UP + GRIP', tag:'both',
+        note:'Give yourself a solid gap after the swim (ideally several hours). Start the lift with decompression.',
+        exercises:[
+          { name:'Dead Hang', sets:'2', reps:'90 sec', cue:'Opens the lats and shoulders after the swim, primes grip for pulling. Cavaliere\'s daily staple.' },
+        ]
+      },
+      { label:'PULL / BACK SERIES (SUPERSET)', tag:'both',
+        note:'SUPERSET: pull then straight into the paired core or stability drill. Back now trained VERTICALLY (pull-up), horizontally (rows), and at full stretch (pullover). Reps: Month A 4–8 heavy / Month B 8–15 moderate.',
+        exercises:[
+          { name:'A1 · Pull-Up (band-assisted if needed)', sets:'3–4', reps:'Per phase / AMRAP', cue:'The most functional upper-body pull there is — Cavaliere\'s benchmark is 10–15 unbroken. Full dead-hang start, chest to bar intent. Loop a band over the bar for assistance if needed; reduce assistance over the 8 weeks.' },
+          { name:'A2 · Pallof Press (band)', sets:'3–4', reps:'10 / side', cue:'Anti-rotation core between pull-up sets. Press out, resist the twist, control back in.' },
+          { name:'B1 · KB Single-Arm Row', sets:'3–4 / arm', reps:'Per phase', cue:'The KB\'s offset load makes the lats and rotator cuff work harder to control it. Drive the elbow back and high, feel the lat.' },
+          { name:'B2 · Single-Leg RDL (mobility board)', sets:'3–4', reps:'8–10 / leg', cue:'BODYWEIGHT or one light DB held goblet-style — balance is the challenge here, not load, and your grip is already taxed from rowing. Hamstring + glute + hip stability in one.' },
+          { name:'C1 · DB Bent-Over Row (elbows wide)', sets:'3–4', reps:'Per phase', cue:'Elbows flared — targets upper traps and rhomboids, a different angle from the lat-focused KB row. Squeeze and fully depress the scapula at the top.' },
+          { name:'C2 · Thread-the-Needle', sets:'3–4', reps:'10 / side', cue:'Thoracic rotation between sets. Keeps the upper back mobile as the back works.' },
+          { name:'D1 · DB Pullover (on bench)', sets:'3', reps:'12–15', cue:'Arms slightly bent, take the DB back overhead until you feel a deep lat + serratus stretch. Lengthened-position lat training.' },
+          { name:'D2 · Deadbug', sets:'3', reps:'10 / side', cue:'Opposite arm and leg extend slowly, low back flat. Anti-extension core to finish the pairing.' },
         ]
       },
       { label:'ARMS + GRIP + NECK', tag:'hub',
-        note:'Huberman\'s end-of-week arm protocol — indirectly trained all week, now directly targeted.',
+        note:'Your dedicated arm block — biceps and triceps get trained indirectly all week, now hit them directly. Straight sets here, not supersets. Biceps and triceps each trained at full stretch AND peak contraction per Huberman\'s rule. Short on time after the swim? The two "optional" moves are the ones to drop.',
         exercises:[
-          { name:'Z-Bar Curl', sets:'3–4', reps:'Per phase', cue:'Z-bar reduces wrist supination stress. Full ROM — don\'t cheat the top or bottom. Squeeze hard at peak, slow on the way down.' },
-          { name:'DB Incline Curl (lengthened position)', sets:'3', reps:'10–12', cue:'Recline on incline bench, arms hang straight. Curl from full stretch. Highest muscle fiber recruitment — the lengthened-position bicep exercise.' },
-          { name:'DB Hammer Curl', sets:'2', reps:'12–15', cue:'Neutral grip. Trains brachialis (underlying muscle that pushes the bicep up). Alternating or simultaneous.' },
-          { name:'Z-Bar Overhead Tricep Extension', sets:'3–4', reps:'Per phase', cue:'Targets long head of tricep (biggest portion). Full stretch overhead, full lockout. Don\'t let elbows flare wide.' },
-          { name:'Band Tricep Pressdown', sets:'2', reps:'15–20 to burnout', cue:'Anchor band overhead. Elbows pinned to sides. Full extension at bottom. Great peak contraction finisher.' },
-          { name:'KB Double Farmer Carry', sets:'3', reps:'30–40 sec', cue:'Heavy KBs. Walk tall, shoulders packed, core braced. Grip strength is a top longevity biomarker. Most functional grip builder you can do at home.' },
-          { name:'Slant Board Calf Raises', sets:'3', reps:'15–20', cue:'Full stretch at bottom, full contraction at top. 2-sec pause at peak.' },
-          { name:'Band Neck Flexion + Extension', sets:'2', reps:'15 each direction', cue:'Huberman staple — neck training improves posture, reduces injury risk, supports CNS health. Go slowly with control.' },
+          { name:'Z-Bar Curl', sets:'3–4', reps:'Per phase', cue:'Z-bar spares the wrists. Full ROM with a deliberate 2-sec squeeze at the top of every rep, slow on the way down.' },
+          { name:'DB Incline Curl (lengthened position)', sets:'3', reps:'10–12', cue:'Recline on the incline bench, arms hang straight, curl from full stretch. Highest fiber recruitment — the STRETCH-position biceps move.' },
+          { name:'Band Curl (peak contraction)', sets:'2', reps:'12–15 · optional if time', cue:'Band tension peaks exactly at the top squeeze — the CONTRACTED-position biceps move, completing the stretch/contraction pair. Hold the squeeze 1–2 sec each rep.' },
+          { name:'Z-Bar Overhead Tricep Extension', sets:'3–4', reps:'Per phase', cue:'Overhead loads the long head (biggest part) at full stretch — the STRETCH-position triceps move. Full stretch, full lockout, elbows in.' },
+          { name:'Band Tricep Pressdown', sets:'2', reps:'15–20 · optional if time', cue:'Elbows pinned, full extension at the bottom — the CONTRACTED-position triceps move. Burnout finisher.' },
+          { name:'KB Double Farmer Carry', sets:'3', reps:'30–40 sec', cue:'Heavy KBs, walk tall, shoulders packed, core braced. Grip strength is a top longevity biomarker.' },
+          { name:'Band Neck Flexion + Extension', sets:'2', reps:'15 each direction', cue:'Huberman staple — neck work improves posture, resilience and CNS health. Slow and controlled.' },
         ]
       }
     ]
@@ -633,22 +666,22 @@ const DAYS = [
     dow:'Saturday', title:'Full Rest + Circadian Reset',
     type:'Rest & Recovery', typeTag:'both', icon:'☀️', dur:'Optional 20 min',
     equipment:[],
-    phil:['Huberman: Morning sunlight within 30 min of waking synchronizes circadian rhythm — foundational, not optional','Cavaliere: Adequate rest is when adaptation happens. Honor it.'],
+    phil:['Huberman: Morning sunlight within 30 min of waking anchors your circadian rhythm','Cavaliere: Rest is when adaptation actually happens — honor it'],
     sections:[
       { label:'HUBERMAN MORNING PROTOCOL', tag:'hub',
-        note:'The rest day is not passive — it\'s a biological reset day. These habits compound your training results.',
+        note:'The rest day isn\'t passive — it\'s a biological reset. These habits compound your training results.',
         exercises:[
-          { name:'Morning Sunlight Exposure', sets:'1', reps:'10–30 min', cue:'Outside within 30 min of waking. No sunglasses. Eyes toward (not at) the sun. Sets cortisol pulse, anchors sleep timing, boosts morning alertness and testosterone.' },
-          { name:'Hydration on Waking', sets:'1', reps:'16–32 oz water', cue:'Before coffee. Replenishes fluid lost during sleep. Simple but underestimated.' },
-          { name:'Optional: 20 min Walk Outside', sets:'1', reps:'20 min easy', cue:'Not training — just movement. Zone 1 activity. Speeds glycogen replenishment.' },
-          { name:'Physiological Sigh + Breathwork', sets:'5–10 min', reps:'As needed', cue:'Practice the calming technique on rest days so it becomes automatic during hard training.' },
+          { name:'Morning Sunlight Exposure', sets:'1', reps:'10–30 min', cue:'Outside within 30 min of waking, no sunglasses, eyes toward (not at) the sun. Sets the cortisol pulse, anchors sleep, boosts alertness.' },
+          { name:'Hydration on Waking', sets:'1', reps:'16–32 oz water', cue:'Before coffee. Replaces fluid lost overnight. Simple but underrated.' },
+          { name:'Optional: 20 min Walk Outside', sets:'1', reps:'20 min easy', cue:'Not training — just Zone 1 movement. Speeds recovery and glycogen replenishment.' },
+          { name:'Physiological Sigh + Breathwork', sets:'5–10 min', reps:'As needed', cue:'Practice the calming technique on rest days so it\'s automatic during hard training.' },
         ]
       },
       { label:'OPTIONAL GENTLE STRETCH', tag:'mob',
-        note:'Only if the body calls for it. 10–15 min max.',
+        note:'Only if the body asks for it. 10–15 min max — nothing aggressive.',
         exercises:[
           { name:'Dead Hang', sets:'1–2', reps:'90 sec', cue:'Daily. Always. Even on rest days.' },
-          { name:'Hip Flexor Stretch + 90/90', sets:'1 per side', reps:'60–90 sec each', cue:'Gentle. Not aggressive. Just maintenance.' },
+          { name:'Hip Flexor Stretch + 90/90', sets:'1 / side', reps:'60–90 sec each', cue:'Gentle maintenance for the hips. Keep it easy.' },
         ]
       }
     ]

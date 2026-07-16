@@ -1,5 +1,5 @@
-const CACHE = 'hybrid-training-v1';
-const ASSETS = ['./', './index.html', './manifest.json'];
+const CACHE = 'hybrid-training-v3';
+const ASSETS = ['./', './index.html', './manifest.json', './icon-192.svg', './icon-512.svg'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
